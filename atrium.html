@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Operate · Legacy Value Partners</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='6' fill='%231F5DB0'/%3E%3Ctext x='50%25' y='62%25' dominant-baseline='central' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-weight='800' font-size='34' fill='%23FFF'%3EL%3C/text%3E%3C/svg%3E">
+  <!--
+    shell-static.html -- the operate.legacyvpartners.com counterpart of
+    shell.html (2026-07-13 migration). shell.html itself is NEVER touched:
+    it keeps serving the original GAS-templated AtriumX.html deployment
+    unchanged, the required rollback path. This is a SEPARATE template for
+    the external static host, built by buildStaticShell() in
+    build-atrium.mjs, not buildShell().
+
+    Everything shell.html's four GAS scriptlets did server-side per request
+    (__dateStr, initialMe, initialBuildTag, initialBoot) has to happen a
+    different way here, since there is no server-side template evaluation
+    on a static host:
+      - dateStr: computed client-side below (Asia/Jerusalem, matching the
+        original server computation).
+      - buildTag: baked in at BUILD TIME by buildStaticShell() (same
+        content-hash substitution mechanism as the JS/CSS URLs below).
+      - initialMe: no longer server-injected. Set client-side after sign-in
+        from the verified Google ID token's email claim.
+      - BOOT: no longer server-injected per-request (there is no
+        per-request compute step). Seeded synchronously from a localStorage
+        cache of the last successful boot payload if one exists (instant
+        paint, matching the original zero-RPC cold-paint guarantee even
+        though the DATA may be a few minutes stale), then reconciled with a
+        fresh fetch right after sign-in. See src/store/store.js's
+        BOOT_CACHE_KEY handling and App.js's bootAtriumX(). A first-ever
+        visit with no cache yet falls back to BOOT = null, same as the
+        app's existing null-safe empty-state rendering already handles.
+  -->
+  <link rel="stylesheet" href="https://noa-svg.github.io/atrium-static/AtriumX.4708124b65.css">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    /* Sign-in gate only -- kept intentionally separate from AtriumX's own
+       interior styles (the proven, reviewed visual system stays untouched;
+       see the plan's "mature Operate rethink" section on why the interior
+       is not being re-skinned). This is threshold-only chrome. */
+    #atrium-gate {
+      position: fixed; inset: 0; z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+      background: #F2EDE0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+    #atrium-gate .card {
+      background: #fff; border: 1px solid rgba(20,20,20,0.16); border-radius: 12px;
+      padding: 32px 28px; max-width: 360px; width: 100%; text-align: center;
+      box-shadow: 0 8px 24px rgba(20,20,20,.08);
+    }
+    #atrium-gate h1 { font-size: 17px; font-weight: 700; margin: 0 0 4px; color: #141414; }
+    #atrium-gate p { font-size: 13px; color: #6D6657; margin: 0 0 20px; }
+    #atrium-gate-signin { display: flex; justify-content: center; min-height: 40px; }
+    #atrium-gate-error {
+      color: #D85E4C; font-size: 13px; font-weight: 600; margin-top: 12px; display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sign-in gate. Hidden immediately once a cached or fresh token is
+       confirmed valid (App.js's bootAtriumX()). This is a UX gate, not the
+       real security boundary -- RpcGate.gs's verifyIdToken_ is the actual
+       enforcement, same principle as the ju-cayman console pattern. -->
+  <div id="atrium-gate">
+    <div class="card">
+      <h1>Sign in to continue</h1>
+      <p>Sign in with your legacyvpartners.com Google account.</p>
+      <div id="atrium-gate-signin"></div>
+      <div id="atrium-gate-error">That account isn't on legacyvpartners.com. Sign in with your Legacy Google account.</div>
+    </div>
+  </div>
+
+  <!-- Mount point. App.js renders the .page wrapper (Masthead + StatusStrip)
+       into this node; the shell stays a thin host. Hidden until sign-in
+       resolves so the interior never renders against an unauthenticated
+       fetch (App.js toggles this, not CSS, so there's one source of truth
+       for gate-vs-app visibility). -->
+  <div id="atrium-root" style="display:none"></div>
+
+  <!-- Toast surfaces (parity with shell.html). -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="toast-stack" class="toast-stack" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      var weekdays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      // Asia/Jerusalem, matching the original server-side computation
+      // (appsscript.json's timeZone) even though this now runs client-side.
+      var parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Asia/Jerusalem', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+      }).formatToParts(new Date());
+      var byType = {};
+      parts.forEach(function (p) { byType[p.type] = p.value; });
+      window.__dateStr = byType.weekday + ' · ' + byType.day + ' ' + byType.month + ' ' + byType.year;
+
+      window.__buildTag = 'v218.18';
+      window.__initialMe = ''; // set post-sign-in, see App.js's bootAtriumX()
+
+      // BOOT: seed from the last-known cache so cold paint stays instant even
+      // though there's no server-side per-request injection anymore. Kept in
+      // sync with store.js's BOOT_CACHE_KEY constant -- if that ever changes,
+      // change it here too.
+      var BOOT = null;
+      try {
+        var cached = localStorage.getItem('lvp_atrium_boot_cache_v1');
+        if (cached) BOOT = JSON.parse(cached);
+      } catch (e) { BOOT = null; }
+      window.BOOT = BOOT;
+    })();
+  </script>
+
+  <!-- Content-hashed, cache-busted; URL substituted at build time. -->
+  <script src="https://noa-svg.github.io/atrium-static/AtriumX.73f962b768.js"></script>
+</body>
+</html>
