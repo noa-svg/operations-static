@@ -3,29 +3,35 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Operations · Legacy Value Partners</title>
+<title>Operate · Legacy Value Partners</title>
 <meta name="robots" content="noindex">
 <style>
 /*
-  Restyled to read as a cousin of the ju-cayman-web onboarding console
-  (~/Desktop/legacy-tools/ju-cayman-web/public/console.html): same token
-  names/values (navy/gold/paper/card/ink/muted/line), same Assistant
-  typeface, same rounded-card + pill-button language, same full-screen
-  navy login treatment with a white rounded card, same filled_blue/pill
-  Google Sign-In button. Functional behavior (localStorage session,
-  sign-in skeleton, hub-note, fade-in error states, hidden-attribute a11y
-  fix) is unchanged from the prior pass.
+  Quick mockup pass (2026-07-13) testing a new visual direction: playful,
+  hand-illustrated "vibe" at the threshold (masthead: bold color field, loose
+  hand-lettered wordmark, scattered icon motifs) -- then clean, professional,
+  numeric interior for the actual work (sign-in card, tile grid). Personality
+  lives at the door, not in the ledger.
+
+  This is a MOCKUP to react to, not the final Phase 2 build -- the tile grid
+  here still links out (same content as the current launcher); the real
+  App Center migration (NAV/portfolio/transfers content itself) happens
+  separately once this direction is confirmed.
 */
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700&display=swap');
+
 :root {
-  --navy:  #0D3F6A;
-  --navy7: #0a3257;
-  --gold:  #FFB42C;
-  --paper: #F7F8FA;
-  --card:  #fff;
-  --ink:   #1A2330;
-  --muted: #6B7888;
-  --line:  #E6EAEF;
-  --red:   #E0413E;
+  --field-blue: #1B5FBF;
+  --field-blue-deep: #123E82;
+  --yellow: #FFC531;
+  --orange: #F2884D;
+  --tomato: #E24C3D;
+  --green: #4F9B5C;
+  --cream: #FAF6EC;
+  --white: #FFFFFF;
+  --ink: #182338;
+  --muted: #62708A;
+  --line: #E7E9EF;
   --gutter: 24px;
   --max: 1080px;
 }
@@ -34,92 +40,96 @@
 html, body {
   margin: 0;
   padding: 0;
-  background: var(--paper);
+  background: var(--cream);
   color: var(--ink);
-  font-family: "Assistant", Arial, sans-serif;
+  font-family: "Nunito", -apple-system, "Helvetica Neue", Arial, sans-serif;
 }
 
-.shell { min-height: 100vh; display: flex; flex-direction: column; }
-
-/* ---- header: same sticky-navy-bar language as the console's .hd ---- */
-.hd {
-  background: var(--navy);
-  color: #fff;
-  padding: 18px 16px;
-  box-shadow: 0 2px 8px rgba(13,63,106,.18);
+/* ---- masthead: the vibe ---- */
+.masthead {
+  position: relative;
+  background: var(--field-blue);
+  background-image: radial-gradient(circle at 15% 20%, rgba(255,255,255,0.06), transparent 40%),
+                     radial-gradient(circle at 85% 75%, rgba(0,0,0,0.10), transparent 45%);
+  padding: 40px 20px 30px;
+  overflow: hidden;
   text-align: center;
 }
-.hd__word {
+.masthead__eyebrow {
+  font-family: "Nunito", sans-serif;
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  opacity: 0.85;
+  color: rgba(255,255,255,0.75);
 }
-.hd__word span { color: var(--gold); }
-.hd__title {
-  margin-top: 4px;
-  font-size: 22px;
-  font-weight: 700;
+.wordmark {
+  margin: 6px 0 4px;
+  font-family: "Baloo 2", sans-serif;
+  font-weight: 800;
+  font-size: 64px;
+  line-height: 1;
+  letter-spacing: 0.01em;
 }
+.wordmark span { display: inline-block; }
+.wordmark .l1 { color: var(--yellow); transform: rotate(-4deg); }
+.wordmark .l2 { color: var(--white); transform: rotate(2deg); }
+.wordmark .l3 { color: var(--tomato); transform: rotate(-2deg); }
+.wordmark .l4 { color: var(--white); transform: rotate(3deg); }
+.wordmark .l5 { color: var(--green); transform: rotate(-3deg); }
+.wordmark .l6 { color: var(--white); transform: rotate(2deg); }
+.wordmark .l7 { color: var(--yellow); transform: rotate(-2deg); }
 
+.icon-tray {
+  position: relative;
+  max-width: 640px;
+  margin: 22px auto 0;
+  height: 150px;
+}
+.icon-tray svg { position: absolute; filter: drop-shadow(0 6px 10px rgba(0,0,0,0.15)); }
+.icon-tray .i1 { left: 4%;  top: 6%;  width: 92px;  transform: rotate(-8deg); }
+.icon-tray .i2 { left: 30%; top: 32%; width: 100px; transform: rotate(6deg); }
+.icon-tray .i3 { left: 58%; top: 2%;  width: 92px;  transform: rotate(-5deg); }
+.icon-tray .i4 { left: 78%; top: 40%; width: 88px;  transform: rotate(9deg); }
+
+/* ---- everything past the threshold: professional, sober ---- */
 main {
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 24px 16px 60px;
+  padding: 40px 16px 60px;
 }
 
-/* ---- sign-in gate: full navy field + white rounded card, console-style ---- */
 #gate {
   width: 100%;
-  min-height: 60vh;
   display: flex;
-  align-items: center;
   justify-content: center;
 }
 .login__card {
-  background: var(--card);
-  border-radius: 16px;
-  padding: 30px 26px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 32px 28px;
   width: 100%;
   max-width: 360px;
   text-align: center;
-  box-shadow: 0 12px 40px rgba(13,63,106,.18);
+  box-shadow: 0 8px 24px rgba(24,35,56,.06);
 }
-.login__t { font-weight: 700; font-size: 18px; color: var(--navy); margin: 0 0 4px; }
+.login__t { font-weight: 700; font-size: 17px; color: var(--ink); margin: 0 0 4px; font-family: "Nunito", sans-serif; }
 .login__s { font-size: 13px; color: var(--muted); margin: 0 0 20px; }
 #g_id_signin { display: flex; justify-content: center; min-height: 40px; }
-.signin-skeleton {
-  width: 220px;
-  height: 40px;
-  border-radius: 999px;
-  background: var(--line);
-}
+.signin-skeleton { width: 220px; height: 40px; border-radius: 8px; background: var(--line); }
 .login__err {
-  color: var(--red);
-  font-size: 13px;
-  font-weight: 600;
-  margin-top: 12px;
-  min-height: 0;
-  display: none;
-  opacity: 0;
-  transition: opacity 240ms ease-out;
+  color: var(--tomato); font-size: 13px; font-weight: 700; margin-top: 12px;
+  display: none; opacity: 0; transition: opacity 240ms ease-out;
 }
 .login__err.visible { opacity: 1; }
 .login__warn {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 16px;
-  display: none;
-  opacity: 0;
-  transition: opacity 240ms ease-out;
+  font-size: 12px; color: var(--muted); margin-top: 16px;
+  display: none; opacity: 0; transition: opacity 240ms ease-out;
 }
 .login__warn.visible { opacity: 1; }
 
-/* ---- hub ---- */
 #hub {
   width: 100%;
   max-width: var(--max);
@@ -140,17 +150,17 @@ main {
 }
 #signout {
   border: 1px solid var(--line);
-  background: var(--card);
+  background: var(--white);
   color: var(--muted);
   font-family: inherit;
   font-size: 13px;
-  font-weight: 600;
-  border-radius: 999px;
+  font-weight: 700;
+  border-radius: 8px;
   padding: 7px 16px;
   cursor: pointer;
   transition: border-color 180ms ease, color 180ms ease;
 }
-#signout:hover { border-color: var(--navy); color: var(--navy); }
+#signout:hover { border-color: var(--ink); color: var(--ink); }
 
 .tiles {
   display: grid;
@@ -162,7 +172,7 @@ main {
 
 .tile {
   display: block;
-  background: var(--card);
+  background: var(--white);
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 20px 18px;
@@ -170,92 +180,81 @@ main {
   color: var(--ink);
   transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
 }
-.tile:hover {
-  border-color: var(--navy);
-  box-shadow: 0 6px 20px rgba(13,63,106,.12);
-  transform: translateY(-2px);
-}
-.tile-label { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.tile:hover { border-color: var(--field-blue); box-shadow: 0 8px 20px rgba(24,35,56,.08); transform: translateY(-2px); }
+.tile-icon { width: 34px; height: 34px; margin-bottom: 10px; }
+.tile-label { font-size: 15px; font-weight: 700; margin-bottom: 6px; font-family: "Nunito", sans-serif; }
 .tile-desc { font-size: 13px; color: var(--muted); line-height: 1.45; }
 
-.hub-note {
-  margin-top: var(--gutter);
-  text-align: center;
-  font-size: 12px;
-  color: var(--muted);
-}
+.hub-note { margin-top: var(--gutter); text-align: center; font-size: 12px; color: var(--muted); }
 
-footer {
-  padding: 20px 16px 32px;
-  text-align: center;
-  font-size: 12px;
-  color: var(--muted);
-}
+footer { padding: 20px 16px 32px; text-align: center; font-size: 12px; color: var(--muted); }
 </style>
 </head>
 <body>
-<div class="shell">
-  <div class="hd">
-    <div class="hd__word">LEGACY <span>VALUE PARTNERS</span></div>
-    <div class="hd__title">Operations</div>
+<div class="masthead">
+  <div class="masthead__eyebrow">Legacy Value Partners</div>
+  <div class="wordmark">
+    <span class="l1">O</span><span class="l2">p</span><span class="l3">e</span><span class="l4">r</span><span class="l5">a</span><span class="l6">t</span><span class="l7">e</span>
   </div>
-
-  <main>
-    <section id="gate">
-      <div class="login__card">
-        <h1 class="login__t">Sign in to continue</h1>
-        <p class="login__s">Sign in with your legacyvpartners.com Google account.</p>
-        <div id="g_id_signin"><div class="signin-skeleton" id="signinSkeleton"></div></div>
-        <div class="login__err" id="gateError">That account isn't on legacyvpartners.com. Sign in with your Legacy Google account.</div>
-        <div class="login__warn" id="gateConfigWarning">
-          Sign-in isn't configured yet. This page needs a Google OAuth Client ID
-          (see <code>GOOGLE_CLIENT_ID</code> in this file's script).
-        </div>
-      </div>
-    </section>
-
-    <section id="hub" hidden>
-      <div class="hub-bar">
-        <span id="whoami"></span>
-        <button id="signout">Sign out</button>
-      </div>
-      <div class="tiles">
-        <a class="tile" href="https://script.google.com/a/macros/legacyvpartners.com/s/AKfycbxIzQKx6SbDzJj0ezjZUkZVKuBB5Go4amrMyZWvWTIZaI3n92dT-cBjUWX9nIQKPTGf/exec" target="_blank" rel="noopener">
-          <div class="tile-label">App Center</div>
-          <div class="tile-desc">The daily portal for NAV, portfolio, transfers, and schedule.</div>
-        </a>
-        <a class="tile" href="https://docs.google.com/spreadsheets/d/1BcFFah16W-sYUHqIt6JyUttMOIQgQ7OyGEPE2zHpy6c/edit" target="_blank" rel="noopener">
-          <div class="tile-label">Transfer Forms</div>
-          <div class="tile-desc">Tracker spreadsheet. Use the Transfer Form menu once it opens.</div>
-        </a>
-        <a class="tile" href="https://docs.google.com/spreadsheets/d/13SDNCrSNP_lthyr4woacjl8HEsPXZlo4lyFimmSPed4/edit" target="_blank" rel="noopener">
-          <div class="tile-label">Rev Share</div>
-          <div class="tile-desc">Family office carry distribution spreadsheet. Use the Family Office Report menu once it opens.</div>
-        </a>
-        <a class="tile" href="https://docs.google.com/spreadsheets/d/1HVKIOTZdxssrx8kOmfRh3MEiWb9K8rwgnoIN_oFq0vM/edit" target="_blank" rel="noopener">
-          <div class="tile-label">Invoice Processor</div>
-          <div class="tile-desc">Billing log spreadsheet. Use the Invoices menu once it opens.</div>
-        </a>
-      </div>
-      <p class="hub-note">Each tool checks your Google sign-in separately. If one asks again, that's normal.</p>
-    </section>
-  </main>
-
-  <footer>Legacy Value Partners &middot; internal use only</footer>
+  <div class="icon-tray">
+    <svg class="i1" viewBox="0 0 100 100"><path d="M15 70 Q30 20 50 55 T85 20" fill="none" stroke="#E24C3D" stroke-width="9" stroke-linecap="round"/><circle cx="85" cy="20" r="7" fill="#E24C3D"/></svg>
+    <svg class="i2" viewBox="0 0 100 100"><rect x="15" y="20" width="70" height="60" rx="8" fill="#FFC531"/><path d="M15 40 L85 40" stroke="#123E82" stroke-width="5"/><path d="M28 55 L45 55 M28 65 L60 65" stroke="#123E82" stroke-width="5" stroke-linecap="round"/></svg>
+    <svg class="i3" viewBox="0 0 100 100"><path d="M25 45 Q50 15 75 45" fill="none" stroke="#4F9B5C" stroke-width="9" stroke-linecap="round"/><path d="M75 45 Q50 75 25 45" fill="none" stroke="#4F9B5C" stroke-width="9" stroke-linecap="round"/><circle cx="50" cy="45" r="9" fill="#FFFFFF"/></svg>
+    <svg class="i4" viewBox="0 0 100 100"><rect x="25" y="30" width="20" height="45" rx="4" fill="#F2884D"/><rect x="55" y="15" width="20" height="60" rx="4" fill="#F2884D"/><rect x="18" y="80" width="64" height="6" rx="3" fill="#123E82"/></svg>
+  </div>
 </div>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<style>@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&display=swap');</style>
+<main>
+  <section id="gate">
+    <div class="login__card">
+      <h1 class="login__t">Sign in to continue</h1>
+      <p class="login__s">Sign in with your legacyvpartners.com Google account.</p>
+      <div id="g_id_signin"><div class="signin-skeleton" id="signinSkeleton"></div></div>
+      <div class="login__err" id="gateError">That account isn't on legacyvpartners.com. Sign in with your Legacy Google account.</div>
+      <div class="login__warn" id="gateConfigWarning">
+        Sign-in isn't configured yet. This page needs a Google OAuth Client ID
+        (see <code>GOOGLE_CLIENT_ID</code> in this file's script).
+      </div>
+    </div>
+  </section>
+
+  <section id="hub" hidden>
+    <div class="hub-bar">
+      <span id="whoami"></span>
+      <button id="signout">Sign out</button>
+    </div>
+    <div class="tiles">
+      <a class="tile" href="https://script.google.com/a/macros/legacyvpartners.com/s/AKfycbxIzQKx6SbDzJj0ezjZUkZVKuBB5Go4amrMyZWvWTIZaI3n92dT-cBjUWX9nIQKPTGf/exec" target="_blank" rel="noopener">
+        <svg class="tile-icon" viewBox="0 0 100 100"><path d="M15 70 Q30 20 50 55 T85 20" fill="none" stroke="#E24C3D" stroke-width="10" stroke-linecap="round"/><circle cx="85" cy="20" r="8" fill="#E24C3D"/></svg>
+        <div class="tile-label">App Center</div>
+        <div class="tile-desc">The daily portal for NAV, portfolio, transfers, and schedule.</div>
+      </a>
+      <a class="tile" href="https://docs.google.com/spreadsheets/d/1BcFFah16W-sYUHqIt6JyUttMOIQgQ7OyGEPE2zHpy6c/edit" target="_blank" rel="noopener">
+        <svg class="tile-icon" viewBox="0 0 100 100"><rect x="15" y="20" width="70" height="60" rx="8" fill="#FFC531"/><path d="M15 40 L85 40" stroke="#182338" stroke-width="5"/><path d="M28 55 L45 55 M28 65 L60 65" stroke="#182338" stroke-width="5" stroke-linecap="round"/></svg>
+        <div class="tile-label">Transfer Forms</div>
+        <div class="tile-desc">Tracker spreadsheet. Use the Transfer Form menu once it opens.</div>
+      </a>
+      <a class="tile" href="https://docs.google.com/spreadsheets/d/13SDNCrSNP_lthyr4woacjl8HEsPXZlo4lyFimmSPed4/edit" target="_blank" rel="noopener">
+        <svg class="tile-icon" viewBox="0 0 100 100"><path d="M25 45 Q50 15 75 45" fill="none" stroke="#4F9B5C" stroke-width="10" stroke-linecap="round"/><path d="M75 45 Q50 75 25 45" fill="none" stroke="#4F9B5C" stroke-width="10" stroke-linecap="round"/><circle cx="50" cy="45" r="9" fill="#FAF6EC"/></svg>
+        <div class="tile-label">Rev Share</div>
+        <div class="tile-desc">Family office carry distribution spreadsheet. Use the Family Office Report menu once it opens.</div>
+      </a>
+      <a class="tile" href="https://docs.google.com/spreadsheets/d/1HVKIOTZdxssrx8kOmfRh3MEiWb9K8rwgnoIN_oFq0vM/edit" target="_blank" rel="noopener">
+        <svg class="tile-icon" viewBox="0 0 100 100"><rect x="25" y="30" width="20" height="45" rx="4" fill="#F2884D"/><rect x="55" y="15" width="20" height="60" rx="4" fill="#F2884D"/><rect x="18" y="80" width="64" height="6" rx="3" fill="#182338"/></svg>
+        <div class="tile-label">Invoice Processor</div>
+        <div class="tile-desc">Billing log spreadsheet. Use the Invoices menu once it opens.</div>
+      </a>
+    </div>
+    <p class="hub-note">Each tool checks your Google sign-in separately. If one asks again, that's normal.</p>
+  </section>
+</main>
+
+<footer>Legacy Value Partners &middot; internal use only</footer>
+
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
-  // Paste the OAuth 2.0 Web-application Client ID here once created in the
-  // LVP GCP project (Google Cloud Console -> APIs & Services -> Credentials),
-  // with authorized JavaScript origin https://operate.legacyvpartners.com.
   var GOOGLE_CLIENT_ID = '717035109771-18bc6sb4651ofk6ep82q1ka4vjum326v.apps.googleusercontent.com';
-
   var STORAGE_KEY = 'lvp_ops_hub_session';
-  // Stays signed in across tabs/restarts until an explicit sign-out --
-  // this is meant to be an everyday launcher, not a one-off (2026-07-13).
 
   function decodeJwtPayload(token) {
     var base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
@@ -329,7 +328,7 @@ footer {
     if (skeleton) skeleton.remove();
     google.accounts.id.renderButton(
       document.getElementById('g_id_signin'),
-      { theme: 'filled_blue', shape: 'pill', size: 'large', text: 'signin_with' }
+      { theme: 'outline', shape: 'rectangular', size: 'large', text: 'signin_with' }
     );
     google.accounts.id.prompt();
   });
