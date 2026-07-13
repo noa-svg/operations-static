@@ -7,40 +7,27 @@
 <meta name="robots" content="noindex">
 <style>
 /*
-  Vignelli canon applied: one typeface (Helvetica), two type sizes plus one
-  named caption-size exception (footer/meta only, see below), one primary
-  color (the blue already labeled "Grandi Stazioni blue, the signature band"
-  in nav-portal/src/styles/tokens.css) used as a real identifier: the masthead
-  accent word and the single rule beneath it. No decorative per-tile color
-  coding. Tokens ported from nav-portal so this hub and App Center read as
-  one system (Design is One).
-
-  Ive principles applied: tile destinations differentiated by copy (the noun
-  "spreadsheet" vs "app") instead of a decorative behavior tag; done/hover
-  states carry through material (hairline at rest, shadow only on interaction,
-  per Y4 no belt-and-suspenders); 180ms ease for the tile hover lift, 240ms
-  ease-out for the gate-to-hub reveal (E2); sign-in button themed filled_black
-  to match the ink/paper palette instead of Google's default blue outline.
+  Restyled to read as a cousin of the ju-cayman-web onboarding console
+  (~/Desktop/legacy-tools/ju-cayman-web/public/console.html): same token
+  names/values (navy/gold/paper/card/ink/muted/line), same Assistant
+  typeface, same rounded-card + pill-button language, same full-screen
+  navy login treatment with a white rounded card, same filled_blue/pill
+  Google Sign-In button. Functional behavior (localStorage session,
+  sign-in skeleton, hub-note, fade-in error states, hidden-attribute a11y
+  fix) is unchanged from the prior pass.
 */
 :root {
-  --paper:      #F2EDE0;
-  --ink:        #141414;
-  --ink-soft:   #6D6657;
-  --ink-faint:  #8A8268;
-  --rule-faint: rgba(20,20,20,0.16);
-  --blue:       #1F5DB0;
-  --coral:      #D85E4C;
-  --white:      #FFFFFF;
-  --gutter:     24px;
-  --margin:     48px;
-  --max:        1240px;
-
-  /* Type: display used once (the one contrast-of-scale moment), body for all
-     content, caption is a named exception for footer/meta text only -- see
-     header comment. */
-  --size-display: 34px;
-  --size-body:    15px;
-  --size-caption: 12px;
+  --navy:  #0D3F6A;
+  --navy7: #0a3257;
+  --gold:  #FFB42C;
+  --paper: #F7F8FA;
+  --card:  #fff;
+  --ink:   #1A2330;
+  --muted: #6B7888;
+  --line:  #E6EAEF;
+  --red:   #E0413E;
+  --gutter: 24px;
+  --max: 1080px;
 }
 
 * { box-sizing: border-box; }
@@ -49,41 +36,31 @@ html, body {
   padding: 0;
   background: var(--paper);
   color: var(--ink);
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: var(--size-body);
-  line-height: 1.5;
+  font-family: "Assistant", Arial, sans-serif;
 }
 
-.shell {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+.shell { min-height: 100vh; display: flex; flex-direction: column; }
 
-/* ---- masthead: the one primary-color moment, a signature band, not a
-   decorative flourish ---- */
-.masthead {
-  padding: var(--margin) var(--gutter) 0;
+/* ---- header: same sticky-navy-bar language as the console's .hd ---- */
+.hd {
+  background: var(--navy);
+  color: #fff;
+  padding: 18px 16px;
+  box-shadow: 0 2px 8px rgba(13,63,106,.18);
   text-align: center;
 }
-.wordmark {
-  font-size: var(--size-body);
+.hd__word {
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+  opacity: 0.85;
 }
-.wordmark span { color: var(--blue); }
-.eyebrow {
-  margin-top: 6px;
-  font-size: var(--size-display);
-  font-weight: 300;
-  letter-spacing: 0.01em;
-}
-.signature-band {
-  width: 64px;
-  height: 2px;
-  background: var(--blue);
-  margin: 20px auto 0;
+.hd__word span { color: var(--gold); }
+.hd__title {
+  margin-top: 4px;
+  font-size: 22px;
+  font-weight: 700;
 }
 
 main {
@@ -92,43 +69,55 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--gutter);
+  padding: 24px 16px 60px;
 }
 
-/* ---- sign-in gate ---- */
-.gate-card {
-  max-width: 380px;
+/* ---- sign-in gate: full navy field + white rounded card, console-style ---- */
+#gate {
   width: 100%;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.login__card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 30px 26px;
+  width: 100%;
+  max-width: 360px;
   text-align: center;
-  padding: 40px 32px;
-  border: 1px solid var(--rule-faint);
-  background: var(--white);
+  box-shadow: 0 12px 40px rgba(13,63,106,.18);
 }
-.gate-card h1 {
-  font-size: var(--size-body);
-  font-weight: 700;
-  margin: 0 0 8px;
+.login__t { font-weight: 700; font-size: 18px; color: var(--navy); margin: 0 0 4px; }
+.login__s { font-size: 13px; color: var(--muted); margin: 0 0 20px; }
+#g_id_signin { display: flex; justify-content: center; min-height: 40px; }
+.signin-skeleton {
+  width: 220px;
+  height: 40px;
+  border-radius: 999px;
+  background: var(--line);
 }
-.gate-card p {
-  font-size: var(--size-body);
-  color: var(--ink-soft);
-  margin: 0 0 24px;
+.login__err {
+  color: var(--red);
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 12px;
+  min-height: 0;
+  display: none;
+  opacity: 0;
+  transition: opacity 240ms ease-out;
 }
-.gate-card #g_id_signin { display: inline-block; }
-.gate-error {
+.login__err.visible { opacity: 1; }
+.login__warn {
+  font-size: 12px;
+  color: var(--muted);
   margin-top: 16px;
-  font-size: var(--size-body);
-  font-weight: 500;
-  color: var(--coral);
   display: none;
+  opacity: 0;
+  transition: opacity 240ms ease-out;
 }
-.gate-config-warning {
-  max-width: 460px;
-  margin-top: 20px;
-  font-size: var(--size-caption);
-  color: var(--ink-faint);
-  display: none;
-}
+.login__warn.visible { opacity: 1; }
 
 /* ---- hub ---- */
 #hub {
@@ -144,88 +133,88 @@ main {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 16px;
+  gap: 12px;
   margin-bottom: var(--gutter);
-  font-size: var(--size-caption);
-  color: var(--ink-soft);
+  font-size: 13px;
+  color: var(--muted);
 }
 #signout {
-  border: 1px solid var(--rule-faint);
-  background: transparent;
-  color: var(--ink-soft);
-  font-size: var(--size-caption);
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--muted);
   font-family: inherit;
-  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 7px 16px;
   cursor: pointer;
   transition: border-color 180ms ease, color 180ms ease;
 }
-#signout:hover { border-color: var(--ink); color: var(--ink); }
+#signout:hover { border-color: var(--navy); color: var(--navy); }
 
 .tiles {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--gutter);
+  gap: 16px;
 }
-@media (min-width: 560px) {
-  .tiles { grid-template-columns: repeat(2, 1fr); }
-}
-@media (min-width: 900px) {
-  .tiles { grid-template-columns: repeat(4, 1fr); }
-}
+@media (min-width: 560px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 900px) { .tiles { grid-template-columns: repeat(4, 1fr); } }
 
 .tile {
   display: block;
-  padding: 28px 24px;
-  background: var(--white);
-  border: 1px solid var(--rule-faint);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px 18px;
   text-decoration: none;
   color: var(--ink);
-  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
 }
 .tile:hover {
+  border-color: var(--navy);
+  box-shadow: 0 6px 20px rgba(13,63,106,.12);
   transform: translateY(-2px);
-  border-color: var(--ink);
-  box-shadow: 0 6px 20px rgba(20,20,20,0.08);
 }
-.tile-label {
-  font-size: var(--size-body);
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-.tile-desc {
-  font-size: var(--size-body);
-  color: var(--ink-soft);
+.tile-label { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.tile-desc { font-size: 13px; color: var(--muted); line-height: 1.45; }
+
+.hub-note {
+  margin-top: var(--gutter);
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
 }
 
 footer {
-  padding: 24px var(--gutter) var(--margin);
+  padding: 20px 16px 32px;
   text-align: center;
-  font-size: var(--size-caption);
-  color: var(--ink-faint);
+  font-size: 12px;
+  color: var(--muted);
 }
 </style>
 </head>
 <body>
 <div class="shell">
-  <div class="masthead">
-    <div class="wordmark">LEGACY <span>VALUE PARTNERS</span></div>
-    <div class="eyebrow">Operations</div>
-    <div class="signature-band"></div>
+  <div class="hd">
+    <div class="hd__word">LEGACY <span>VALUE PARTNERS</span></div>
+    <div class="hd__title">Operations</div>
   </div>
 
   <main>
-    <section id="gate" class="gate-card">
-      <h1>Sign in to continue</h1>
-      <p>Sign in with your legacyvpartners.com Google account.</p>
-      <div id="g_id_signin"></div>
-      <div class="gate-error" id="gateError">That account isn't on legacyvpartners.com. Sign in with your Legacy Google account.</div>
-      <div class="gate-config-warning" id="gateConfigWarning">
-        Sign-in isn't configured yet. This page needs a Google OAuth Client ID
-        (see <code>GOOGLE_CLIENT_ID</code> in this file's script).
+    <section id="gate">
+      <div class="login__card">
+        <h1 class="login__t">Sign in to continue</h1>
+        <p class="login__s">Sign in with your legacyvpartners.com Google account.</p>
+        <div id="g_id_signin"><div class="signin-skeleton" id="signinSkeleton"></div></div>
+        <div class="login__err" id="gateError">That account isn't on legacyvpartners.com. Sign in with your Legacy Google account.</div>
+        <div class="login__warn" id="gateConfigWarning">
+          Sign-in isn't configured yet. This page needs a Google OAuth Client ID
+          (see <code>GOOGLE_CLIENT_ID</code> in this file's script).
+        </div>
       </div>
     </section>
 
-    <section id="hub">
+    <section id="hub" hidden>
       <div class="hub-bar">
         <span id="whoami"></span>
         <button id="signout">Sign out</button>
@@ -248,12 +237,15 @@ footer {
           <div class="tile-desc">Billing log spreadsheet. Use the Invoices menu once it opens.</div>
         </a>
       </div>
+      <p class="hub-note">Each tool checks your Google sign-in separately. If one asks again, that's normal.</p>
     </section>
   </main>
 
   <footer>Legacy Value Partners &middot; internal use only</footer>
 </div>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&display=swap');</style>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
   // Paste the OAuth 2.0 Web-application Client ID here once created in the
@@ -262,6 +254,8 @@ footer {
   var GOOGLE_CLIENT_ID = '717035109771-18bc6sb4651ofk6ep82q1ka4vjum326v.apps.googleusercontent.com';
 
   var STORAGE_KEY = 'lvp_ops_hub_session';
+  // Stays signed in across tabs/restarts until an explicit sign-out --
+  // this is meant to be an everyday launcher, not a one-off (2026-07-13).
 
   function decodeJwtPayload(token) {
     var base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
@@ -276,11 +270,14 @@ footer {
     var hub = document.getElementById('hub');
     gate.style.display = 'none';
     document.getElementById('whoami').textContent = 'Signed in as ' + email;
+    hub.hidden = false;
     requestAnimationFrame(function () { hub.classList.add('visible'); });
   }
 
   function showGateError() {
-    document.getElementById('gateError').style.display = 'block';
+    var el = document.getElementById('gateError');
+    el.style.display = 'block';
+    requestAnimationFrame(function () { el.classList.add('visible'); });
   }
 
   function handleCredentialResponse(response) {
@@ -297,12 +294,12 @@ footer {
       return;
     }
 
-    sessionStorage.setItem(STORAGE_KEY, email);
+    localStorage.setItem(STORAGE_KEY, email);
     showHub(email);
   }
 
   document.getElementById('signout').addEventListener('click', function () {
-    sessionStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(STORAGE_KEY);
     if (window.google && google.accounts && google.accounts.id) {
       google.accounts.id.disableAutoSelect();
     }
@@ -310,14 +307,16 @@ footer {
   });
 
   window.addEventListener('load', function () {
-    var existing = sessionStorage.getItem(STORAGE_KEY);
+    var existing = localStorage.getItem(STORAGE_KEY);
     if (existing) {
       showHub(existing);
       return;
     }
 
     if (!GOOGLE_CLIENT_ID) {
-      document.getElementById('gateConfigWarning').style.display = 'block';
+      var warning = document.getElementById('gateConfigWarning');
+      warning.style.display = 'block';
+      requestAnimationFrame(function () { warning.classList.add('visible'); });
       return;
     }
 
@@ -326,9 +325,11 @@ footer {
       callback: handleCredentialResponse,
       hd: 'legacyvpartners.com'
     });
+    var skeleton = document.getElementById('signinSkeleton');
+    if (skeleton) skeleton.remove();
     google.accounts.id.renderButton(
       document.getElementById('g_id_signin'),
-      { theme: 'filled_black', shape: 'rectangular', size: 'large', text: 'signin_with' }
+      { theme: 'filled_blue', shape: 'pill', size: 'large', text: 'signin_with' }
     );
     google.accounts.id.prompt();
   });
