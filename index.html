@@ -1,337 +1,119 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Operate · Legacy Value Partners</title>
-<meta name="robots" content="noindex">
-<style>
-/*
-  Quick mockup pass (2026-07-13) testing a new visual direction: playful,
-  hand-illustrated "vibe" at the threshold (masthead: bold color field, loose
-  hand-lettered wordmark, scattered icon motifs) -- then clean, professional,
-  numeric interior for the actual work (sign-in card, tile grid). Personality
-  lives at the door, not in the ledger.
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Operate · Legacy Value Partners</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='6' fill='%231F5DB0'/%3E%3Ctext x='50%25' y='62%25' dominant-baseline='central' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-weight='800' font-size='34' fill='%23FFF'%3EL%3C/text%3E%3C/svg%3E">
+  <!--
+    shell-static.html -- the operate.legacyvpartners.com counterpart of
+    shell.html (2026-07-13 migration). shell.html itself is NEVER touched:
+    it keeps serving the original GAS-templated AtriumX.html deployment
+    unchanged, the required rollback path. This is a SEPARATE template for
+    the external static host, built by buildStaticShell() in
+    build-atrium.mjs, not buildShell().
 
-  This is a MOCKUP to react to, not the final Phase 2 build -- the tile grid
-  here still links out (same content as the current launcher); the real
-  App Center migration (NAV/portfolio/transfers content itself) happens
-  separately once this direction is confirmed.
-*/
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700&display=swap');
-
-:root {
-  --field-blue: #1B5FBF;
-  --field-blue-deep: #123E82;
-  --yellow: #FFC531;
-  --orange: #F2884D;
-  --tomato: #E24C3D;
-  --green: #4F9B5C;
-  --cream: #FAF6EC;
-  --white: #FFFFFF;
-  --ink: #182338;
-  --muted: #62708A;
-  --line: #E7E9EF;
-  --gutter: 24px;
-  --max: 1080px;
-}
-
-* { box-sizing: border-box; }
-html, body {
-  margin: 0;
-  padding: 0;
-  background: var(--cream);
-  color: var(--ink);
-  font-family: "Nunito", -apple-system, "Helvetica Neue", Arial, sans-serif;
-}
-
-/* ---- masthead: the vibe ---- */
-.masthead {
-  position: relative;
-  background: var(--field-blue);
-  background-image: radial-gradient(circle at 15% 20%, rgba(255,255,255,0.06), transparent 40%),
-                     radial-gradient(circle at 85% 75%, rgba(0,0,0,0.10), transparent 45%);
-  padding: 40px 20px 30px;
-  overflow: hidden;
-  text-align: center;
-}
-.masthead__eyebrow {
-  font-family: "Nunito", sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.75);
-}
-.wordmark {
-  margin: 6px 0 4px;
-  font-family: "Baloo 2", sans-serif;
-  font-weight: 800;
-  font-size: 64px;
-  line-height: 1;
-  letter-spacing: 0.01em;
-}
-.wordmark span { display: inline-block; }
-.wordmark .l1 { color: var(--yellow); transform: rotate(-4deg); }
-.wordmark .l2 { color: var(--white); transform: rotate(2deg); }
-.wordmark .l3 { color: var(--tomato); transform: rotate(-2deg); }
-.wordmark .l4 { color: var(--white); transform: rotate(3deg); }
-.wordmark .l5 { color: var(--green); transform: rotate(-3deg); }
-.wordmark .l6 { color: var(--white); transform: rotate(2deg); }
-.wordmark .l7 { color: var(--yellow); transform: rotate(-2deg); }
-
-.icon-tray {
-  position: relative;
-  max-width: 640px;
-  margin: 22px auto 0;
-  height: 150px;
-}
-.icon-tray svg { position: absolute; filter: drop-shadow(0 6px 10px rgba(0,0,0,0.15)); }
-.icon-tray .i1 { left: 4%;  top: 6%;  width: 92px;  transform: rotate(-8deg); }
-.icon-tray .i2 { left: 30%; top: 32%; width: 100px; transform: rotate(6deg); }
-.icon-tray .i3 { left: 58%; top: 2%;  width: 92px;  transform: rotate(-5deg); }
-.icon-tray .i4 { left: 78%; top: 40%; width: 88px;  transform: rotate(9deg); }
-
-/* ---- everything past the threshold: professional, sober ---- */
-main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 40px 16px 60px;
-}
-
-#gate {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-.login__card {
-  background: var(--white);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 32px 28px;
-  width: 100%;
-  max-width: 360px;
-  text-align: center;
-  box-shadow: 0 8px 24px rgba(24,35,56,.06);
-}
-.login__t { font-weight: 700; font-size: 17px; color: var(--ink); margin: 0 0 4px; font-family: "Nunito", sans-serif; }
-.login__s { font-size: 13px; color: var(--muted); margin: 0 0 20px; }
-#g_id_signin { display: flex; justify-content: center; min-height: 40px; }
-.signin-skeleton { width: 220px; height: 40px; border-radius: 8px; background: var(--line); }
-.login__err {
-  color: var(--tomato); font-size: 13px; font-weight: 700; margin-top: 12px;
-  display: none; opacity: 0; transition: opacity 240ms ease-out;
-}
-.login__err.visible { opacity: 1; }
-.login__warn {
-  font-size: 12px; color: var(--muted); margin-top: 16px;
-  display: none; opacity: 0; transition: opacity 240ms ease-out;
-}
-.login__warn.visible { opacity: 1; }
-
-#hub {
-  width: 100%;
-  max-width: var(--max);
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 240ms ease-out, transform 240ms ease-out;
-}
-#hub.visible { opacity: 1; transform: none; }
-
-.hub-bar {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-bottom: var(--gutter);
-  font-size: 13px;
-  color: var(--muted);
-}
-#signout {
-  border: 1px solid var(--line);
-  background: var(--white);
-  color: var(--muted);
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 700;
-  border-radius: 8px;
-  padding: 7px 16px;
-  cursor: pointer;
-  transition: border-color 180ms ease, color 180ms ease;
-}
-#signout:hover { border-color: var(--ink); color: var(--ink); }
-
-.tiles {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-}
-@media (min-width: 560px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 900px) { .tiles { grid-template-columns: repeat(4, 1fr); } }
-
-.tile {
-  display: block;
-  background: var(--white);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 20px 18px;
-  text-decoration: none;
-  color: var(--ink);
-  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
-}
-.tile:hover { border-color: var(--field-blue); box-shadow: 0 8px 20px rgba(24,35,56,.08); transform: translateY(-2px); }
-.tile-icon { width: 34px; height: 34px; margin-bottom: 10px; }
-.tile-label { font-size: 15px; font-weight: 700; margin-bottom: 6px; font-family: "Nunito", sans-serif; }
-.tile-desc { font-size: 13px; color: var(--muted); line-height: 1.45; }
-
-.hub-note { margin-top: var(--gutter); text-align: center; font-size: 12px; color: var(--muted); }
-
-footer { padding: 20px 16px 32px; text-align: center; font-size: 12px; color: var(--muted); }
-</style>
+    Everything shell.html's four GAS scriptlets did server-side per request
+    (__dateStr, initialMe, initialBuildTag, initialBoot) has to happen a
+    different way here, since there is no server-side template evaluation
+    on a static host:
+      - dateStr: computed client-side below (Asia/Jerusalem, matching the
+        original server computation).
+      - buildTag: baked in at BUILD TIME by buildStaticShell() (same
+        content-hash substitution mechanism as the JS/CSS URLs below).
+      - initialMe: no longer server-injected. Set client-side after sign-in
+        from the verified Google ID token's email claim.
+      - BOOT: no longer server-injected per-request (there is no
+        per-request compute step). Seeded synchronously from a localStorage
+        cache of the last successful boot payload if one exists (instant
+        paint, matching the original zero-RPC cold-paint guarantee even
+        though the DATA may be a few minutes stale), then reconciled with a
+        fresh fetch right after sign-in. See src/store/store.js's
+        BOOT_CACHE_KEY handling and App.js's bootAtriumX(). A first-ever
+        visit with no cache yet falls back to BOOT = null, same as the
+        app's existing null-safe empty-state rendering already handles.
+  -->
+  <link rel="stylesheet" href="assets/AtriumX.4708124b65.css">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    /* Sign-in gate only -- kept intentionally separate from AtriumX's own
+       interior styles (the proven, reviewed visual system stays untouched;
+       see the plan's "mature Operate rethink" section on why the interior
+       is not being re-skinned). This is threshold-only chrome. */
+    #atrium-gate {
+      position: fixed; inset: 0; z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+      background: #F2EDE0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+    #atrium-gate .card {
+      background: #fff; border: 1px solid rgba(20,20,20,0.16); border-radius: 12px;
+      padding: 32px 28px; max-width: 360px; width: 100%; text-align: center;
+      box-shadow: 0 8px 24px rgba(20,20,20,.08);
+    }
+    #atrium-gate h1 { font-size: 17px; font-weight: 700; margin: 0 0 4px; color: #141414; }
+    #atrium-gate p { font-size: 13px; color: #6D6657; margin: 0 0 20px; }
+    #atrium-gate-signin { display: flex; justify-content: center; min-height: 40px; }
+    #atrium-gate-error {
+      color: #D85E4C; font-size: 13px; font-weight: 600; margin-top: 12px; display: none;
+    }
+  </style>
 </head>
 <body>
-<div class="masthead">
-  <div class="masthead__eyebrow">Legacy Value Partners</div>
-  <div class="wordmark">
-    <span class="l1">O</span><span class="l2">p</span><span class="l3">e</span><span class="l4">r</span><span class="l5">a</span><span class="l6">t</span><span class="l7">e</span>
+
+  <!-- Sign-in gate. Hidden immediately once a cached or fresh token is
+       confirmed valid (App.js's bootAtriumX()). This is a UX gate, not the
+       real security boundary -- RpcGate.gs's verifyIdToken_ is the actual
+       enforcement, same principle as the ju-cayman console pattern. -->
+  <div id="atrium-gate">
+    <div class="card">
+      <h1>Sign in to continue</h1>
+      <p>Sign in with your legacyvpartners.com Google account.</p>
+      <div id="atrium-gate-signin"></div>
+      <div id="atrium-gate-error">That account isn't on legacyvpartners.com. Sign in with your Legacy Google account.</div>
+    </div>
   </div>
-  <div class="icon-tray">
-    <svg class="i1" viewBox="0 0 100 100"><path d="M15 70 Q30 20 50 55 T85 20" fill="none" stroke="#E24C3D" stroke-width="9" stroke-linecap="round"/><circle cx="85" cy="20" r="7" fill="#E24C3D"/></svg>
-    <svg class="i2" viewBox="0 0 100 100"><rect x="15" y="20" width="70" height="60" rx="8" fill="#FFC531"/><path d="M15 40 L85 40" stroke="#123E82" stroke-width="5"/><path d="M28 55 L45 55 M28 65 L60 65" stroke="#123E82" stroke-width="5" stroke-linecap="round"/></svg>
-    <svg class="i3" viewBox="0 0 100 100"><path d="M25 45 Q50 15 75 45" fill="none" stroke="#4F9B5C" stroke-width="9" stroke-linecap="round"/><path d="M75 45 Q50 75 25 45" fill="none" stroke="#4F9B5C" stroke-width="9" stroke-linecap="round"/><circle cx="50" cy="45" r="9" fill="#FFFFFF"/></svg>
-    <svg class="i4" viewBox="0 0 100 100"><rect x="25" y="30" width="20" height="45" rx="4" fill="#F2884D"/><rect x="55" y="15" width="20" height="60" rx="4" fill="#F2884D"/><rect x="18" y="80" width="64" height="6" rx="3" fill="#123E82"/></svg>
-  </div>
-</div>
 
-<main>
-  <section id="gate">
-    <div class="login__card">
-      <h1 class="login__t">Sign in to continue</h1>
-      <p class="login__s">Sign in with your legacyvpartners.com Google account.</p>
-      <div id="g_id_signin"><div class="signin-skeleton" id="signinSkeleton"></div></div>
-      <div class="login__err" id="gateError">That account isn't on legacyvpartners.com. Sign in with your Legacy Google account.</div>
-      <div class="login__warn" id="gateConfigWarning">
-        Sign-in isn't configured yet. This page needs a Google OAuth Client ID
-        (see <code>GOOGLE_CLIENT_ID</code> in this file's script).
-      </div>
-    </div>
-  </section>
+  <!-- Mount point. App.js renders the .page wrapper (Masthead + StatusStrip)
+       into this node; the shell stays a thin host. Hidden until sign-in
+       resolves so the interior never renders against an unauthenticated
+       fetch (App.js toggles this, not CSS, so there's one source of truth
+       for gate-vs-app visibility). -->
+  <div id="atrium-root" style="display:none"></div>
 
-  <section id="hub" hidden>
-    <div class="hub-bar">
-      <span id="whoami"></span>
-      <button id="signout">Sign out</button>
-    </div>
-    <div class="tiles">
-      <a class="tile" href="https://script.google.com/a/macros/legacyvpartners.com/s/AKfycbxIzQKx6SbDzJj0ezjZUkZVKuBB5Go4amrMyZWvWTIZaI3n92dT-cBjUWX9nIQKPTGf/exec" target="_blank" rel="noopener">
-        <svg class="tile-icon" viewBox="0 0 100 100"><path d="M15 70 Q30 20 50 55 T85 20" fill="none" stroke="#E24C3D" stroke-width="10" stroke-linecap="round"/><circle cx="85" cy="20" r="8" fill="#E24C3D"/></svg>
-        <div class="tile-label">App Center</div>
-        <div class="tile-desc">The daily portal for NAV, portfolio, transfers, and schedule.</div>
-      </a>
-      <a class="tile" href="https://docs.google.com/spreadsheets/d/1BcFFah16W-sYUHqIt6JyUttMOIQgQ7OyGEPE2zHpy6c/edit" target="_blank" rel="noopener">
-        <svg class="tile-icon" viewBox="0 0 100 100"><rect x="15" y="20" width="70" height="60" rx="8" fill="#FFC531"/><path d="M15 40 L85 40" stroke="#182338" stroke-width="5"/><path d="M28 55 L45 55 M28 65 L60 65" stroke="#182338" stroke-width="5" stroke-linecap="round"/></svg>
-        <div class="tile-label">Transfer Forms</div>
-        <div class="tile-desc">Tracker spreadsheet. Use the Transfer Form menu once it opens.</div>
-      </a>
-      <a class="tile" href="https://docs.google.com/spreadsheets/d/13SDNCrSNP_lthyr4woacjl8HEsPXZlo4lyFimmSPed4/edit" target="_blank" rel="noopener">
-        <svg class="tile-icon" viewBox="0 0 100 100"><path d="M25 45 Q50 15 75 45" fill="none" stroke="#4F9B5C" stroke-width="10" stroke-linecap="round"/><path d="M75 45 Q50 75 25 45" fill="none" stroke="#4F9B5C" stroke-width="10" stroke-linecap="round"/><circle cx="50" cy="45" r="9" fill="#FAF6EC"/></svg>
-        <div class="tile-label">Rev Share</div>
-        <div class="tile-desc">Family office carry distribution spreadsheet. Use the Family Office Report menu once it opens.</div>
-      </a>
-      <a class="tile" href="https://docs.google.com/spreadsheets/d/1HVKIOTZdxssrx8kOmfRh3MEiWb9K8rwgnoIN_oFq0vM/edit" target="_blank" rel="noopener">
-        <svg class="tile-icon" viewBox="0 0 100 100"><rect x="25" y="30" width="20" height="45" rx="4" fill="#F2884D"/><rect x="55" y="15" width="20" height="60" rx="4" fill="#F2884D"/><rect x="18" y="80" width="64" height="6" rx="3" fill="#182338"/></svg>
-        <div class="tile-label">Invoice Processor</div>
-        <div class="tile-desc">Billing log spreadsheet. Use the Invoices menu once it opens.</div>
-      </a>
-    </div>
-    <p class="hub-note">Each tool checks your Google sign-in separately. If one asks again, that's normal.</p>
-  </section>
-</main>
+  <!-- Toast surfaces (parity with shell.html). -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="toast-stack" class="toast-stack" aria-live="polite"></div>
 
-<footer>Legacy Value Partners &middot; internal use only</footer>
+  <script>
+    (function () {
+      var weekdays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      // Asia/Jerusalem, matching the original server-side computation
+      // (appsscript.json's timeZone) even though this now runs client-side.
+      var parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Asia/Jerusalem', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+      }).formatToParts(new Date());
+      var byType = {};
+      parts.forEach(function (p) { byType[p.type] = p.value; });
+      window.__dateStr = byType.weekday + ' · ' + byType.day + ' ' + byType.month + ' ' + byType.year;
 
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-<script>
-  var GOOGLE_CLIENT_ID = '717035109771-18bc6sb4651ofk6ep82q1ka4vjum326v.apps.googleusercontent.com';
-  var STORAGE_KEY = 'lvp_ops_hub_session';
+      window.__buildTag = 'v218.18';
+      window.__initialMe = ''; // set post-sign-in, see App.js's bootAtriumX()
 
-  function decodeJwtPayload(token) {
-    var base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-    var json = decodeURIComponent(atob(base64).split('').map(function (c) {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-    return JSON.parse(json);
-  }
+      // BOOT: seed from the last-known cache so cold paint stays instant even
+      // though there's no server-side per-request injection anymore. Kept in
+      // sync with store.js's BOOT_CACHE_KEY constant -- if that ever changes,
+      // change it here too.
+      var BOOT = null;
+      try {
+        var cached = localStorage.getItem('lvp_atrium_boot_cache_v1');
+        if (cached) BOOT = JSON.parse(cached);
+      } catch (e) { BOOT = null; }
+      window.BOOT = BOOT;
+    })();
+  </script>
 
-  function showHub(email) {
-    var gate = document.getElementById('gate');
-    var hub = document.getElementById('hub');
-    gate.style.display = 'none';
-    document.getElementById('whoami').textContent = 'Signed in as ' + email;
-    hub.hidden = false;
-    requestAnimationFrame(function () { hub.classList.add('visible'); });
-  }
-
-  function showGateError() {
-    var el = document.getElementById('gateError');
-    el.style.display = 'block';
-    requestAnimationFrame(function () { el.classList.add('visible'); });
-  }
-
-  function handleCredentialResponse(response) {
-    var payload;
-    try { payload = decodeJwtPayload(response.credential); }
-    catch (e) { showGateError(); return; }
-
-    var email = String(payload.email || '').toLowerCase();
-    var hd = String(payload.hd || '');
-    var onDomain = hd === 'legacyvpartners.com' || email.endsWith('@legacyvpartners.com');
-
-    if (!onDomain || !payload.email_verified) {
-      showGateError();
-      return;
-    }
-
-    localStorage.setItem(STORAGE_KEY, email);
-    showHub(email);
-  }
-
-  document.getElementById('signout').addEventListener('click', function () {
-    localStorage.removeItem(STORAGE_KEY);
-    if (window.google && google.accounts && google.accounts.id) {
-      google.accounts.id.disableAutoSelect();
-    }
-    location.reload();
-  });
-
-  window.addEventListener('load', function () {
-    var existing = localStorage.getItem(STORAGE_KEY);
-    if (existing) {
-      showHub(existing);
-      return;
-    }
-
-    if (!GOOGLE_CLIENT_ID) {
-      var warning = document.getElementById('gateConfigWarning');
-      warning.style.display = 'block';
-      requestAnimationFrame(function () { warning.classList.add('visible'); });
-      return;
-    }
-
-    google.accounts.id.initialize({
-      client_id: GOOGLE_CLIENT_ID,
-      callback: handleCredentialResponse,
-      hd: 'legacyvpartners.com'
-    });
-    var skeleton = document.getElementById('signinSkeleton');
-    if (skeleton) skeleton.remove();
-    google.accounts.id.renderButton(
-      document.getElementById('g_id_signin'),
-      { theme: 'outline', shape: 'rectangular', size: 'large', text: 'signin_with' }
-    );
-    google.accounts.id.prompt();
-  });
-</script>
+  <!-- Content-hashed, cache-busted; URL substituted at build time. -->
+  <script src="assets/AtriumX.73f962b768.js"></script>
 </body>
 </html>
