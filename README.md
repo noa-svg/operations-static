@@ -1,7 +1,7 @@
 # operations-static
 
 Static launcher hub for LVP operations tooling, published via GitHub Pages at
-`operations.legacyvpartners.com`. Same shape as `atrium-static`/`cayman-form-static`:
+`operate.legacyvpartners.com`. Same shape as `atrium-static`/`cayman-form-static`:
 plain HTML/CSS/JS, no build step, no server.
 
 Google Sign-In (domain-restricted to legacyvpartners.com) gates the tile grid.
