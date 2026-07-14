@@ -44,8 +44,29 @@
       position: fixed; inset: 0; z-index: 1000;
       display: flex; align-items: center; justify-content: center;
       background: #F2EDE0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      overflow: hidden;
     }
+    /* Tel Aviv skyline, doodled -- Azrieli's three towers, Moshe Aviv, a
+       crane (there's always a crane). Pure line art, no fill: the feTurbulence
+       + feDisplacementMap filter below adds a single continuous hand-wobble
+       across the whole group, like it was drawn once in one unsteady pass
+       rather than traced clean and distorted per-shape. Sits behind the card,
+       anchored to the bottom edge, low-contrast so it reads as paper texture
+       first and skyline second. */
+    #atrium-gate-skyline {
+      position: absolute; left: 0; right: 0; bottom: 0; width: 100%;
+      height: 34vh; min-height: 220px; max-height: 340px;
+      z-index: 1; pointer-events: none;
+    }
+    #atrium-gate-skyline svg { width: 100%; height: 100%; display: block; }
+    #atrium-gate-skyline .bld {
+      fill: none; stroke: #6D6657; stroke-width: 1.6;
+      stroke-linecap: round; stroke-linejoin: round;
+      filter: url(#atrium-sketch);
+    }
+    #atrium-gate-skyline .bld--soft { stroke-width: 1.2; opacity: 0.55; }
     #atrium-gate .card {
+      position: relative; z-index: 2;
       background: #fff; border: 1px solid rgba(20,20,20,0.16); border-radius: 12px;
       padding: 32px 28px; max-width: 360px; width: 100%; text-align: center;
       box-shadow: 0 8px 24px rgba(20,20,20,.08);
@@ -65,6 +86,98 @@
        real security boundary -- RpcGate.gs's verifyIdToken_ is the actual
        enforcement, same principle as the ju-cayman console pattern. -->
   <div id="atrium-gate">
+    <div id="atrium-gate-skyline" aria-hidden="true">
+      <svg viewBox="0 0 1600 300" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <!-- One continuous wobble applied to every path -- a doodle drawn
+               in a single unsteady pass, not clean shapes with noise added
+               per-element (that reads as "distorted", not "hand-drawn"). -->
+          <filter id="atrium-sketch" x="-5%" y="-5%" width="110%" height="110%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="2" seed="7" result="noise"/>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+          </filter>
+        </defs>
+
+        <!-- baseline filler, low rises, left edge. The signature cluster
+             (Azrieli x3 + Moshe Aviv) is centered in the viewBox via the
+             translate(450,0) group below, so it survives cropping on a
+             narrow/mobile "slice" -- this left run is pure filler, safe to
+             lose on a narrow viewport. -->
+        <path class="bld bld--soft" d="M0,280 L0,190 L40,190 L40,280"/>
+        <path class="bld" d="M55,280 L55,155 L100,155 L100,280"/>
+        <path class="bld bld--soft" d="M63,167 L63,268 M75,167 L75,268 M87,167 L87,268"/>
+        <path class="bld bld--soft" d="M115,280 L115,210 L150,210 L150,280"/>
+        <path class="bld" d="M165,280 L165,175 L210,175 L210,280"/>
+        <path class="bld bld--soft" d="M173,187 L173,268 M185,187 L185,268 M197,187 L197,268"/>
+        <path class="bld bld--soft" d="M225,280 L225,235 L260,235 L260,280"/>
+        <path class="bld" d="M280,280 L280,145 L295,145 L295,125 L325,125 L325,280"/>
+        <path class="bld bld--soft" d="M340,280 L340,200 L380,200 L380,280"/>
+        <path class="bld bld--soft" d="M348,212 L348,268 M362,212 L362,268 M372,212 L372,268"/>
+        <path class="bld" d="M400,280 L400,165 L440,165 L440,280"/>
+        <path class="bld bld--soft" d="M408,177 L408,268 M420,177 L420,268 M430,177 L430,268"/>
+        <path class="bld bld--soft" d="M460,280 L460,230 L495,230 L495,280"/>
+        <path class="bld" d="M515,280 L515,190 L555,190 L555,280"/>
+        <path class="bld bld--soft" d="M523,202 L523,268 M535,202 L535,268 M547,202 L547,268"/>
+
+      <g transform="translate(450,0)">
+        <path class="bld" d="M110,280 L110,140 L165,140 L165,280"/>
+        <path class="bld bld--soft" d="M118,150 L118,270 M132,150 L132,270 M146,150 L146,270 M110,165 L165,165 M110,195 L165,195 M110,225 L165,225 M110,255 L165,255"/>
+
+        <!-- Azrieli Round Tower -->
+        <path class="bld" d="M195,280 C186,220 186,120 200,75 C206,58 224,58 230,75 C244,120 244,220 235,280"/>
+        <ellipse class="bld" cx="215" cy="72" rx="16" ry="6"/>
+
+        <!-- Azrieli Square Tower -->
+        <path class="bld" d="M280,280 L280,100 L350,100 L350,280"/>
+        <path class="bld bld--soft" d="M292,112 L292,268 M304,112 L304,268 M316,112 L316,268 M328,112 L328,268 M338,112 L338,268"/>
+        <path class="bld bld--soft" d="M280,135 L350,135 M280,165 L350,165 M280,195 L350,195 M280,225 L350,225 M280,255 L350,255"/>
+
+        <!-- Azrieli Triangular Tower -->
+        <path class="bld" d="M365,280 L365,120 L410,68 L455,120 L455,280"/>
+        <path class="bld bld--soft" d="M375,270 L400,150 M445,270 L420,150 M383,150 L437,150 M390,190 L430,190 M394,225 L426,225"/>
+
+        <!-- low gap filler -->
+        <path class="bld bld--soft" d="M470,280 L470,205 L520,205 L520,280"/>
+
+        <!-- Moshe Aviv Tower (tallest, tapered, antenna) -->
+        <path class="bld" d="M545,280 L552,90 L560,55 L568,90 L575,280"/>
+        <path class="bld" d="M560,55 L560,20"/>
+        <path class="bld bld--soft" d="M552,110 L568,110 M551,150 L569,150 M550,190 L570,190 M549,230 L571,230"/>
+
+        <!-- mid-rise with a crane, because there is always a crane -->
+        <path class="bld bld--soft" d="M600,280 L600,170 L655,170 L655,280"/>
+        <path class="bld" d="M615,170 L615,95 M615,100 L672,88 M655,108 L661,120 L649,120 Z M672,88 L672,100"/>
+
+        <!-- HaShalom-ish tower with a setback notch -->
+        <path class="bld" d="M700,280 L700,135 L722,135 L722,118 L752,118 L752,280"/>
+        <path class="bld bld--soft" d="M700,160 L752,160 M700,190 L752,190 M700,220 L752,220 M700,250 L752,250"/>
+
+        <!-- right-hand skyline: varied low/mid rises, filling the width -->
+        <path class="bld bld--soft" d="M775,280 L775,230 L815,230 L815,280"/>
+        <path class="bld" d="M830,280 L830,195 L880,195 L880,280"/>
+        <path class="bld bld--soft" d="M838,207 L838,270 M852,207 L852,270 M866,207 L866,270"/>
+        <path class="bld bld--soft" d="M895,280 L895,245 L925,245 L925,280"/>
+        <path class="bld" d="M945,280 L945,165 L985,165 L985,280"/>
+        <path class="bld bld--soft" d="M953,178 L953,268 M967,178 L967,268 M977,178 L977,268"/>
+        <path class="bld bld--soft" d="M1005,280 L1005,220 L1045,220 L1045,280"/>
+        <path class="bld" d="M1065,280 L1065,140 L1080,140 L1080,120 L1110,120 L1110,280"/>
+        <path class="bld bld--soft" d="M1125,280 L1125,235 L1160,235 L1160,280"/>
+        <path class="bld" d="M1180,280 L1180,180 L1225,180 L1225,280"/>
+        <path class="bld bld--soft" d="M1188,192 L1188,268 M1202,192 L1202,268 M1214,192 L1214,268"/>
+        <path class="bld bld--soft" d="M1245,280 L1245,250 L1270,250 L1270,280"/>
+        <path class="bld" d="M1290,280 L1290,155 L1300,140 L1310,155 L1310,280"/>
+        <path class="bld bld--soft" d="M1330,280 L1330,210 L1370,210 L1370,280"/>
+        <path class="bld" d="M1390,280 L1390,175 L1435,175 L1435,280"/>
+        <path class="bld bld--soft" d="M1398,187 L1398,268 M1412,187 L1412,268 M1424,187 L1424,268"/>
+        <path class="bld bld--soft" d="M1455,280 L1455,240 L1490,240 L1490,280"/>
+        <path class="bld" d="M1510,280 L1510,200 L1550,200 L1550,280"/>
+        <path class="bld bld--soft" d="M1518,212 L1518,268 M1532,212 L1532,268 M1542,212 L1542,268"/>
+      </g>
+
+        <!-- ground line -->
+        <path class="bld bld--soft" d="M0,280 L1600,280"/>
+      </svg>
+    </div>
     <div class="card">
       <h1>Sign in to continue</h1>
       <p>Sign in with your legacyvpartners.com Google account.</p>
