@@ -52,7 +52,14 @@
        across the whole group, like it was drawn once in one unsteady pass
        rather than traced clean and distorted per-shape. Sits behind the card,
        anchored to the bottom edge, low-contrast so it reads as paper texture
-       first and skyline second. */
+       first and skyline second.
+       2026-07-14 v2: Noa sent a real reference (a Tel Aviv storefront window,
+       thick-marker doodles on glass -- wine bottles, glasses, a piano, dense
+       scrawled scribble texture filling the gaps, occasional solid-black
+       fills for graphic punch). The first pass read as too clean/CAD-like
+       next to that. Thickened the line, pushed the wobble rawer, added a
+       few solid-black accents and scribble-texture clusters in the sky --
+       same technique, more marker, less ruler. */
     #atrium-gate-skyline {
       position: absolute; left: 0; right: 0; bottom: 0; width: 100%;
       height: 34vh; min-height: 220px; max-height: 340px;
@@ -60,11 +67,17 @@
     }
     #atrium-gate-skyline svg { width: 100%; height: 100%; display: block; }
     #atrium-gate-skyline .bld {
-      fill: none; stroke: #6D6657; stroke-width: 1.6;
+      fill: none; stroke: #4A4438; stroke-width: 3;
       stroke-linecap: round; stroke-linejoin: round;
       filter: url(#atrium-sketch);
     }
-    #atrium-gate-skyline .bld--soft { stroke-width: 1.2; opacity: 0.55; }
+    #atrium-gate-skyline .bld--soft { stroke-width: 2.2; opacity: 0.6; }
+    #atrium-gate-skyline .bld--fill { fill: #4A4438; stroke: none; }
+    #atrium-gate-skyline .bld--scribble {
+      fill: none; stroke: #4A4438; stroke-width: 2; opacity: 0.4;
+      stroke-linecap: round; stroke-linejoin: round;
+      filter: url(#atrium-sketch);
+    }
     #atrium-gate .card {
       position: relative; z-index: 2;
       background: #fff; border: 1px solid rgba(20,20,20,0.16); border-radius: 12px;
@@ -92,9 +105,9 @@
           <!-- One continuous wobble applied to every path -- a doodle drawn
                in a single unsteady pass, not clean shapes with noise added
                per-element (that reads as "distorted", not "hand-drawn"). -->
-          <filter id="atrium-sketch" x="-5%" y="-5%" width="110%" height="110%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="2" seed="7" result="noise"/>
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+          <filter id="atrium-sketch" x="-8%" y="-8%" width="116%" height="116%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.017 0.024" numOctaves="2" seed="7" result="noise"/>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="9" xChannelSelector="R" yChannelSelector="G"/>
           </filter>
         </defs>
 
@@ -123,14 +136,18 @@
         <path class="bld" d="M110,280 L110,140 L165,140 L165,280"/>
         <path class="bld bld--soft" d="M118,150 L118,270 M132,150 L132,270 M146,150 L146,270 M110,165 L165,165 M110,195 L165,195 M110,225 L165,225 M110,255 L165,255"/>
 
-        <!-- Azrieli Round Tower -->
+        <!-- Azrieli Round Tower -- cap filled solid, graphic punch like the
+             reference's solid-black wine glasses. -->
         <path class="bld" d="M195,280 C186,220 186,120 200,75 C206,58 224,58 230,75 C244,120 244,220 235,280"/>
-        <ellipse class="bld" cx="215" cy="72" rx="16" ry="6"/>
+        <ellipse class="bld bld--fill" cx="215" cy="72" rx="16" ry="6" filter="url(#atrium-sketch)"/>
 
-        <!-- Azrieli Square Tower -->
+        <!-- Azrieli Square Tower -- two lit windows filled solid, same
+             graphic-punch move as the round tower's cap. -->
         <path class="bld" d="M280,280 L280,100 L350,100 L350,280"/>
         <path class="bld bld--soft" d="M292,112 L292,268 M304,112 L304,268 M316,112 L316,268 M328,112 L328,268 M338,112 L338,268"/>
         <path class="bld bld--soft" d="M280,135 L350,135 M280,165 L350,165 M280,195 L350,195 M280,225 L350,225 M280,255 L350,255"/>
+        <rect class="bld bld--fill" x="305" y="138" width="10" height="12" filter="url(#atrium-sketch)"/>
+        <rect class="bld bld--fill" x="317" y="198" width="10" height="12" filter="url(#atrium-sketch)"/>
 
         <!-- Azrieli Triangular Tower -->
         <path class="bld" d="M365,280 L365,120 L410,68 L455,120 L455,280"/>
@@ -143,6 +160,14 @@
         <path class="bld" d="M545,280 L552,90 L560,55 L568,90 L575,280"/>
         <path class="bld" d="M560,55 L560,20"/>
         <path class="bld bld--soft" d="M552,110 L568,110 M551,150 L569,150 M550,190 L570,190 M549,230 L571,230"/>
+
+        <!-- Sky scribble-texture, echoing the reference's dense scrawled
+             negative-space fill. Loose scratchy loops, not literal text --
+             a few small clusters, not everywhere (S1 reduction still
+             applies; this is texture, not the point). -->
+        <path class="bld--scribble" d="M420,35 q6,-8 12,0 q6,8 12,0 q6,-8 12,0 q4,6 10,2"/>
+        <path class="bld--scribble" d="M615,40 q5,-7 10,0 t10,0 q5,-7 10,1"/>
+        <path class="bld--scribble" d="M480,20 q4,8 -2,10 q6,2 4,10 q-6,0 -4,-8"/>
 
         <!-- mid-rise with a crane, because there is always a crane -->
         <path class="bld bld--soft" d="M600,280 L600,170 L655,170 L655,280"/>
