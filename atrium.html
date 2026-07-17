@@ -235,13 +235,16 @@
       parts.forEach(function (p) { byType[p.type] = p.value; });
       window.__dateStr = byType.weekday + ' · ' + byType.day + ' ' + byType.month + ' ' + byType.year;
 
-      window.__buildTag = 'v221.4';
+      window.__buildTag = 'v221.5';
       window.__initialMe = ''; // set post-sign-in, see App.js's bootAtriumX()
 
       // BOOT: seed from the last-known cache so cold paint stays instant even
-      // though there's no server-side per-request injection anymore. Kept in
-      // sync with store.js's BOOT_CACHE_KEY constant -- if that ever changes,
-      // change it here too.
+      // though there's no server-side per-request injection anymore. This
+      // inline seed runs BEFORE the bundle loads, so it can't import the
+      // constant -- it hardcodes store.js's BOOT_CACHE_KEY literal. The build
+      // enforces the two match: build-atrium.mjs's assertBootCacheKeyInSync
+      // (scripts/build-lib/bootCacheKeyGuard.mjs) aborts on any drift, so this
+      // literal can't silently fall out of sync with store.js.
       var BOOT = null;
       try {
         var cached = localStorage.getItem('lvp_atrium_boot_cache_v1');
@@ -252,6 +255,6 @@
   </script>
 
   <!-- Content-hashed, cache-busted; URL substituted at build time. -->
-  <script src="assets/AtriumX.f85c0a0e2c.js"></script>
+  <script src="assets/AtriumX.74acfeddeb.js"></script>
 </body>
 </html>
